@@ -30,7 +30,7 @@ table = inst.getTable("datable")
 x = 2
 y = 1
 
-# model
+# model 
 model = YOLO('yolov8n.pt')
 
 # object classes
