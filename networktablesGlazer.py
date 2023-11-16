@@ -1,33 +1,31 @@
-import ntcore
+import os
+os.environ['MPLCONFIGDIR'] = os.getcwd() + "/configs/" 
+# import ntcore
 from ultralytics import YOLO
 import torch
 
 import cv2
 import math 
 
-inst = ntcore.NetworkTableInstance.getDefault()
-
-
-
+# inst = ntcore.NetworkTableInstance.getDefault()
 
 # start webcam
-cap = cv2.VideoCapture()
-cap.set(3, 640)
-cap.set(4, 480)
+# cap = cv2.VideoCapture()
+# cap.set(3, 640)
+# cap.set(4, 480)
 
+# inst.startClient4("example client")
 
-inst.startClient4("example client")
+# # connect to a roboRIO with team number TEAM
+# inst.setServerTeam(5635)
 
-# connect to a roboRIO with team number TEAM
-inst.setServerTeam(5635)
+# # starting a DS client will try to get the roboRIO address from the DS application
+# inst.startDSClient()
 
-# starting a DS client will try to get the roboRIO address from the DS application
-inst.startDSClient()
-
-inst.setServer("host", ntcore.NetworkTableInstance.kDefaultPort4)
+# inst.setServer("host", ntcore.NetworkTableInstance.kDefaultPort4)
 
 # Get the table within that instance that contains the data. Correct the table name.
-table = inst.getTable("datable")
+# table = inst.getTable("datable")
 x = 2
 y = 1
 
@@ -39,12 +37,21 @@ classNames = ["cubeholder"]
 
 print("ok2")
 
-
 while True:
-    success, img = cap.read()
+    img = cv2.imread("images/people.jpg")
+
+    # Check if the image file exists
+    if img is None:
+        print("Error: Unable to read the image.")
+        break
+
+    # Print some information about the loaded YOLO model
+    print("Model info:", model)
+
     results = model('images/people.jpg', stream=True)
-    # print('results', results==None)
-    # print('img', img[1, 2])
+
+    # Print some debug information
+    print("Results:", results)
 
     print("ok3")
 
@@ -60,6 +67,7 @@ while True:
     # x += 0.05
     # y += 1.0
     print("ok33")
+
     # coordinates
     for r in results:
         print("ok4")
@@ -74,7 +82,6 @@ while True:
             print("x2", x2)
             print("y1", y1)
             print("y2", y2)
-            
 
             # put box in cam
             cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 255), 3)
@@ -102,4 +109,3 @@ while True:
 
 # cap.release()
 cv2.destroyAllWindows()
-
